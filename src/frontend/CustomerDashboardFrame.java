@@ -25,7 +25,6 @@ public class CustomerDashboardFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // ===================== SIDEBAR =====================
         JPanel panelSidebar = new JPanel();
         panelSidebar.setBackground(new Color(33, 37, 41));
         panelSidebar.setPreferredSize(new Dimension(230, 700));
@@ -38,7 +37,6 @@ public class CustomerDashboardFrame extends JFrame {
         lblUser.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSidebar.add(lblUser);
 
-        // Label ID pelanggan kecil
         JLabel lblId = new JLabel("ID Pelanggan: #" + SessionManager.getIdPelanggan());
         lblId.setForeground(new Color(150, 150, 150));
         lblId.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -46,12 +44,12 @@ public class CustomerDashboardFrame extends JFrame {
         lblId.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 10));
         panelSidebar.add(lblId);
 
-        JButton btnKatalog   = createNavButton("🛍 Cari & Katalog Produk");
-        JButton btnKeranjang = createNavButton("🛒 Keranjang Belanja");
-        JButton btnSaldo     = createNavButton("💳 Saldo & Top Up"); 
-        JButton btnProfil   = createNavButton("👤 Profil & Alamat");
-        JButton btnUlasan   = createNavButton("⭐ Ulasan Produk"); // MENU BARU
-        JButton btnRiwayat   = createNavButton("📋 Riwayat Pesanan");
+        JButton btnKatalog   = createNavButton("Cari & Katalog Produk");
+        JButton btnKeranjang = createNavButton("Keranjang Belanja");
+        JButton btnSaldo     = createNavButton("Saldo & Top Up");
+        JButton btnProfil   = createNavButton("Profil & Alamat");
+        JButton btnUlasan   = createNavButton("Ulasan Produk");
+        JButton btnRiwayat   = createNavButton("Riwayat Pesanan");
         JButton btnLogout    = createNavButton("Keluar / Logout");
         btnLogout.setBackground(new Color(220, 53, 69));
         btnLogout.setForeground(Color.WHITE);
@@ -60,7 +58,7 @@ public class CustomerDashboardFrame extends JFrame {
         panelSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
         panelSidebar.add(btnKeranjang);
         panelSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-        panelSidebar.add(btnSaldo);       // tambahkan ke sidebar
+        panelSidebar.add(btnSaldo);
         panelSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
         panelSidebar.add(btnProfil);
         panelSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -72,17 +70,16 @@ public class CustomerDashboardFrame extends JFrame {
         panelSidebar.add(Box.createRigidArea(new Dimension(0, 20)));
         add(panelSidebar, BorderLayout.WEST);
 
-        // ===================== CONTENT AREA =====================
-        cardLayout = new CardLayout();
+                cardLayout = new CardLayout();
         panelContentRight = new JPanel(cardLayout);
 
         productSearchPanel = new ProductSearchPanel(this);
         cartPanel          = new CartPanel(this);
         checkoutPanel      = new CheckoutPanel(this);
         orderHistoryPanel  = new OrderHistoryPanel();
-        topUpSaldoPanel    = new TopUpSaldoPanel(); 
+        topUpSaldoPanel    = new TopUpSaldoPanel();
         profilPanel        = new ProfilPanel();
-        ulasanPanel        = new UlasanPanel();// PANEL BARU
+        ulasanPanel        = new UlasanPanel();
 
         panelContentRight.add(productSearchPanel, "KATALOG");
         panelContentRight.add(cartPanel,          "KERANJANG");
@@ -90,10 +87,9 @@ public class CustomerDashboardFrame extends JFrame {
         panelContentRight.add(orderHistoryPanel,  "RIWAYAT");
         panelContentRight.add(topUpSaldoPanel,    "SALDO");
         panelContentRight.add(profilPanel, "PROFIL");
-        panelContentRight.add(ulasanPanel, "ULASAN");   // daftarkan ke CardLayout
+        panelContentRight.add(ulasanPanel, "ULASAN");
         add(panelContentRight, BorderLayout.CENTER);
 
-        // ===================== NAVIGASI =====================
         btnKatalog.addActionListener(e -> cardLayout.show(panelContentRight, "KATALOG"));
 
         btnKeranjang.addActionListener(e -> {
@@ -101,7 +97,6 @@ public class CustomerDashboardFrame extends JFrame {
             cardLayout.show(panelContentRight, "KERANJANG");
         });
 
-        // Klik Saldo & Top Up -> load data terbaru dari database lalu tampilkan
         btnSaldo.addActionListener(e -> {
             topUpSaldoPanel.loadData();
             cardLayout.show(panelContentRight, "SALDO");
@@ -111,7 +106,7 @@ public class CustomerDashboardFrame extends JFrame {
             profilPanel.muatData();
             cardLayout.show(panelContentRight, "PROFIL");
         });
- 
+
         btnUlasan.addActionListener(e -> {
             ulasanPanel.muatData();
             cardLayout.show(panelContentRight, "ULASAN");
@@ -142,15 +137,10 @@ public class CustomerDashboardFrame extends JFrame {
         cardLayout.show(panelContentRight, "KERANJANG");
     }
 
-    /**
-     * Dipanggil setelah checkout berhasil.
-     * Kosongkan keranjang, pindah ke riwayat pesanan, dan refresh panel saldo
-     * agar saldo yang berkurang langsung terlihat.
-     */
+
     public void setelahCheckoutBerhasil() {
         cartPanel.getKeranjangItems().clear();
         cartPanel.refreshTabel();
-        // Refresh data saldo di background agar sinkron
         topUpSaldoPanel.loadData();
         cardLayout.show(panelContentRight, "RIWAYAT");
     }

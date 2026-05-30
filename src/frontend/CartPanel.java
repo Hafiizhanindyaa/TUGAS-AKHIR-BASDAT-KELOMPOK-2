@@ -16,8 +16,7 @@ public class CartPanel extends JPanel {
     private DefaultTableModel tableModel;
     private JLabel lblTotal;
 
-    // Data keranjang disimpan sebagai list item in-memory
-    private List<Object[]> keranjangItems = new ArrayList<>(); // {idVarian, namaProduk, warna, ukuran, harga, qty, subtotal}
+        private List<Object[]> keranjangItems = new ArrayList<>();
     private InventoryDAO inventoryDAO;
     private CustomerDashboardFrame parentFrame;
 
@@ -31,7 +30,6 @@ public class CartPanel extends JPanel {
         lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
         add(lblTitle, BorderLayout.NORTH);
 
-        // Tabel keranjang
         String[] cols = {"ID Varian", "Nama Produk", "Warna", "Ukuran", "Harga/pcs", "Qty", "Subtotal"};
         tableModel = new DefaultTableModel(cols, 0) {
             public boolean isCellEditable(int r, int c) { return false; }
@@ -40,7 +38,6 @@ public class CartPanel extends JPanel {
         tblKeranjang.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(tblKeranjang), BorderLayout.CENTER);
 
-        // Panel bawah
         JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
         lblTotal = new JLabel("Total: Rp 0", SwingConstants.RIGHT);
         lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
@@ -79,7 +76,6 @@ public class CartPanel extends JPanel {
     }
 
     public void tambahKeKeranjang(int idVarian, String namaProduk, String warna, String ukuran, double harga) {
-        // Cek apakah varian sudah ada, kalau iya tambah qty saja
         for (Object[] item : keranjangItems) {
             if ((int)item[0] == idVarian) {
                 int qtyLama = (int)item[5];
