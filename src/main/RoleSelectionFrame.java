@@ -5,8 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import frontend.CustomerDashboardFrame;
+import backend.AdminDashboardFrame;
+
 public class RoleSelectionFrame extends JFrame {
-    
+
     public RoleSelectionFrame() {
         setTitle("Zalora E-Commerce System - Kelompok 2");
         setSize(500, 300);
@@ -14,13 +17,11 @@ public class RoleSelectionFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Header
         JLabel lblTitle = new JLabel("Sistem Manajemen E-Commerce Zalora", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(25, 10, 10, 10));
         add(lblTitle, BorderLayout.NORTH);
 
-        // Panel Tombol
         JPanel panelButtons = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
@@ -37,25 +38,26 @@ public class RoleSelectionFrame extends JFrame {
 
         add(panelButtons, BorderLayout.CENTER);
 
-        // --- ACTION LOGIC ---
-        
-        // Klik Pembeli -> Langsung buka dashboard pembeli
+
         btnCustomer.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Membuka Katalog Zalora...");
-            // next: new CustomerDashboardFrame().setVisible(true);
-            // this.dispose();
+            LoginDialog loginDlg = new LoginDialog(this, "PEMBELI");
+            loginDlg.setVisible(true);
+
+            if (loginDlg.isLoginSuccess()) {
+                JOptionPane.showMessageDialog(this, "Selamat Datang, " + config.SessionManager.getNamaAkun() + "!");
+                                new CustomerDashboardFrame().setVisible(true);
+                this.dispose();
+            }
         });
 
-        // Klik Admin -> Panggil Pop-up Login khusus Admin
         btnAdmin.addActionListener(e -> {
-            LoginDialog loginDlg = new LoginDialog(this);
+            LoginDialog loginDlg = new LoginDialog(this, "ADMIN");
             loginDlg.setVisible(true);
-            
-            // Jika login sukses (diatur dari variabel di LoginDialog)
-            if (loginDlg.isSucceeded()) {
-                JOptionPane.showMessageDialog(this, "Login Berhasil! Selamat Datang Admin.");
-                // next: new AdminDashboardFrame().setVisible(true);
-                // this.dispose();
+
+            if (loginDlg.isLoginSuccess()) {
+                JOptionPane.showMessageDialog(this, "Akses Admin Diterima. Membuka Back-End Panel...");
+                                new AdminDashboardFrame().setVisible(true);
+                this.dispose();
             }
         });
     }
